@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo</title>
+  <title>Latch和lock的区别 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="##Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 ###Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="Latch和lock的区别">
 <meta property="og:url" content="http://yoursite.com/2018/07/21/latch和lock的区别/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="##Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 ###Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-21T08:57:24.318Z">
+<meta property="og:updated_time" content="2018-07-21T09:01:21.784Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Latch和lock的区别">
 <meta name="twitter:description" content="##Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 ###Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -67,12 +67,22 @@
         <section id="main"><article id="post-latch和lock的区别" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/07/21/latch和lock的区别/" class="article-date">
-  <time datetime="2018-07-21T08:47:51.366Z" itemprop="datePublished">2018-07-21</time>
+  <time datetime="2018-07-21T09:00:20.000Z" itemprop="datePublished">2018-07-21</time>
 </a>
     
   </div>
   <div class="article-inner">
     
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Latch和lock的区别
+    </h1>
+  
+
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
@@ -89,7 +99,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv6k6nd0002xsqw7yvpzghp" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv6pbic00026gqw9ptqe70d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -99,9 +109,9 @@
 <nav id="article-nav">
   
   
-    <a href="/2018/07/21/bufferpool/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/07/21/内存数据库/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">bufferpool</div>
+      <div class="article-nav-title">内存数据库</div>
     </a>
   
 </nav>
@@ -138,7 +148,11 @@
       <ul>
         
           <li>
-            <a href="/2018/07/21/latch和lock的区别/">(no title)</a>
+            <a href="/2018/07/21/latch和lock的区别/">Latch和lock的区别</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/21/内存数据库/">内存数据库</a>
           </li>
         
           <li>
