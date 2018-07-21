@@ -62,6 +62,46 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-内存数据库" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/21/内存数据库/" class="article-date">
+  <time datetime="2018-07-21T09:19:20.000Z" itemprop="datePublished">2018-07-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/07/21/内存数据库/">内存数据库</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="为什么产生内存数据库"><a href="#为什么产生内存数据库" class="headerlink" title="为什么产生内存数据库"></a>为什么产生内存数据库</h3><p>传统的数据库管理系统把所有数据都放在磁盘上进行管理，所以称做磁盘数据库（DRDB:Disk-Resident Database）。<br>磁盘数据库需要频繁地访问磁盘来进行数据的操作，由于对磁盘读写数据的操作一方面要进行磁头的机械移动，另一方面受到系统调用（通常通过CPU中断完成，受到CPU时钟周期的制约）时间的影响，当数据量很大，操作频繁且复杂时，就会暴露出很多问题。<br>近年来，内存容量不断提高，价格不断下跌，操作系统已经可以支持更大的地址空间（计算机进入了64位时代），同时对数据库系统实时响应能力要求日益提高，充分利用内存技术提升数据库性能成为一个热点。</p>
+<h3 id="数据库如何使用大量的内存"><a href="#数据库如何使用大量的内存" class="headerlink" title="数据库如何使用大量的内存"></a>数据库如何使用大量的内存</h3><p>在数据库技术中，目前主要有两种方法来使用大量的内存。一种是在传统的数据库中，增大缓冲池，将一个事务所涉及的数据都放在缓冲池中，组织成相应的数据结构来进行查询和更新处理，也就是常说的共享内存技术，这种方法优化的主要目标是最小化磁盘访问。<br>另一种就是内存数据库(MMDB:Main Memory Database，也叫主存数据库)技术，就是干脆重新设计一种数据库管理系统，对查询处理、并发控制与恢复的算法和数据结构进行重新设计，以更有效地使用CPU周期和内存，这种技术近乎把整个数据库放进内存中，因而会产生一些根本性的变化。  </p>
+<h3 id="Larger-than-Memory-Databases"><a href="#Larger-than-Memory-Databases" class="headerlink" title="Larger-than-Memory Databases"></a>Larger-than-Memory Databases</h3><p>允许内存中的DBMS存储/访问磁盘上的数据，而无需重新引入面向磁盘的DBMS的所有慢速缺点。DBMS需要一种机制来将冷数据移出内存，移到磁盘。当有查询访问磁盘上的冷数据时，DBMS能够再次检索它。</p>
+<h3 id="为什么不使用mmap"><a href="#为什么不使用mmap" class="headerlink" title="为什么不使用mmap"></a>为什么不使用mmap</h3><p>MMAP是一种内存映射到磁盘文件的方式,mmap的执行，仅仅是在内核中建立了文件与虚拟内存空间的对应关系。用户访问这些虚拟内存空间时，页面表里面是没有这些空间的表项的。当用户程序试图访问这些映射的空间时，于是产生缺页异常。内核捕捉这些异常，逐渐将文件载入。所谓的载入过程，具体的操作就是read和write在管理pagecache。Vma的结构体中有很文件操作集。vma操作集中会有自己关于page cache的操作集合。这样，虽然是两种不同的系统调用，由于操作和调用触发的路径不同。但是最后还是落实到了page cache的管理。实现了文件内容的操作。<br>这种方式依赖于操作系统自己的内核，会带来如下的问题：<br>1.预写日志记录要求修改的页面在写入这些更改的日志记录之前不能写入磁盘。<br>2.没有同步预读或同时写多个页面的机制,导致并发性能极差。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/07/21/内存数据库/" data-id="cjjv7peee00033oqwscnxpk0j" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-latch和lock的区别" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/07/21/latch和lock的区别/" class="article-date">
@@ -84,56 +124,20 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##Latch和lock的区别<br>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。</p>
-<p>###Latch和Lock的对比</p>
+        <p>Latch和lock的区别<br>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。<br>Latch和Lock的对比</p>
 <ol>
 <li>Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥Latch的访问，包括查询也是互斥的，任何时候，只能有一个进程能pin住内存的某一块，幸好这个过程是相当的短暂，否则系统性能将没的保障，现在从9I开始，允许多个进程同时查询相同的内存块，但性能并没有想象中的好。</li>
 <li>Latch只作用于内存中，他只能被当前实例访问，而Lock作用于数据库对象，在RAC体系中实例间允许Lock检测与访问。</li>
 <li>Latch是瞬间的占用，释放，Lock的释放需要等到事务正确的结束，他占用的时间长短由事务大小决定。</li>
 <li>Latch是非入队的，而Lock是入队的。</li>
-<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)<br>###mysql中Latch。<br>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</li>
+<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)</li>
 </ol>
+<p>mysql中Latch。<br>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv6pbic00026gqw9ptqe70d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-内存数据库" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/07/21/内存数据库/" class="article-date">
-  <time datetime="2018-07-21T09:00:20.000Z" itemprop="datePublished">2018-07-21</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/07/21/内存数据库/">内存数据库</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/内存数据库/" data-id="cjjv6pbiq00036gqwgrwt33fm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv7peec00023oqwngtya61o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -171,7 +175,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/bufferpool/" data-id="cjjv6pbi300006gqwgslgra6k" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/bufferpool/" data-id="cjjv7pee300003oqw0laos5d2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -216,7 +220,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/hello-world/" data-id="cjjv6pbi900016gqw27elfwzm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/hello-world/" data-id="cjjv7pee900013oqwzrea7e4m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -256,11 +260,11 @@
       <ul>
         
           <li>
-            <a href="/2018/07/21/latch和lock的区别/">Latch和lock的区别</a>
+            <a href="/2018/07/21/内存数据库/">内存数据库</a>
           </li>
         
           <li>
-            <a href="/2018/07/21/内存数据库/">内存数据库</a>
+            <a href="/2018/07/21/latch和lock的区别/">Latch和lock的区别</a>
           </li>
         
           <li>
