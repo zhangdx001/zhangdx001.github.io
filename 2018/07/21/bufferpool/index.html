@@ -5,17 +5,17 @@
   
   <title>bufferpool | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##缓冲池（BufferPool）对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S）">
+  <meta name="description" content="缓冲池（BufferPool）对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通">
 <meta property="og:type" content="article">
 <meta property="og:title" content="bufferpool">
 <meta property="og:url" content="http://yoursite.com/2018/07/21/bufferpool/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="##缓冲池（BufferPool）对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S）">
+<meta property="og:description" content="缓冲池（BufferPool）对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-21T08:36:29.906Z">
+<meta property="og:updated_time" content="2018-07-21T09:34:41.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bufferpool">
-<meta name="twitter:description" content="##缓冲池（BufferPool）对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S）">
+<meta name="twitter:description" content="缓冲池（BufferPool）对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -86,13 +86,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##缓冲池（BufferPool）<br>对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通过将部分常用或者需要预取的数据存放在缓冲池以便系统直接访问和操作可以减少磁盘I/O，合理的缓冲池空间和好的缓冲池页面替换算法（提高命中率）可以大大提高数据库系统的性能。</p>
-<p>###缓冲池组成<br>InnoDB有多个内存块，可以认为这些内存块组成了一个大的内存池，负责如下工作：<br>1.维护所有进程/线程需要访问的多个内部数据结构。<br>2.缓存磁盘上的数据，方便快速的读取，并且在对磁盘文件的数据进行修改之前在这里缓存。<br>3.重做日志（redo log）缓冲。<br>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据。此外，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生 异常情况下InnoDB能恢复到正常运行状态。<br>InnoDB存储引擎内存由以下几个部分组成：<br>缓冲池（buffer pool）、重做日志缓冲池（redo log buffer）以及额外的内存池（additional memory pool），分别由配置文件中的参数innodb_buffer_pool_size、innodb_log_buffer_size、innodb_additional_mem_pool_size的大小决定。<br>缓冲池中缓存的数据页类型有：索引页、数据页、undo页、插入缓冲（insert buffer），自适应哈希索引（adaptive hash index）、InnoDB存储的锁信息（lock info）、数据字典信息（data dictionary）等，缓冲池不仅有数据页和索引页，只是他们占缓冲池的很大部分。<br>缓冲池是用来存放各种数据的缓冲，因为InnoDB的存储引擎的工作方式总是将数据库文件按页（每页16K）读取到缓冲池，然后按最近最少使用（LRU）的算法来保 留在缓冲池中的缓存数据。如果数据库文件需要修改，总是首先修改在缓冲池中的页（发生修改后，该页即为脏页），然后再按照一定的频率将缓冲池的脏页刷新 （flush）到文件。<br>日志缓冲将重做日志信息先放入这个缓冲区，然后按一定频率将其刷新到重做日志文件，该值一般不需要设置很大，因为一般情况下每一秒就会将重做日志缓冲刷新 到日志文件，因此我们只需要保证每秒产生的事务量在innodb_log_buffer_size参数控制的缓冲大小之内即可。 额外的内存池通常被忽略，其实该值十分重要，在InnoDB存储引擎中，对内存的管理是通过一种称为内存堆（heap）的方式进行的。在对一些数据结构本身分配内存时，需要从额外内存池中申请，该区域的内存不够时，会从缓存池中申请。InnoDB实例会申请缓冲池（InnoDB_buffer_pool）的空间，但是每个缓冲池中的帧缓冲（frame buffer）还有对应的缓冲控制对象（buffer control block），而且这些对象记录了诸如LRU、锁、等待方面的信息，而这个对象的内存需要从额外内存池中申请。因此InnoDB缓冲池比较大时，额外内存池也应该增大</p>
+        <h2 id="缓冲池（BufferPool）"><a href="#缓冲池（BufferPool）" class="headerlink" title="缓冲池（BufferPool）"></a>缓冲池（BufferPool）</h2><p>对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通过将部分常用或者需要预取的数据存放在缓冲池以便系统直接访问和操作可以减少磁盘I/O，合理的缓冲池空间和好的缓冲池页面替换算法（提高命中率）可以大大提高数据库系统的性能。</p>
+<h3 id="缓冲池组成"><a href="#缓冲池组成" class="headerlink" title="缓冲池组成"></a>缓冲池组成</h3><p>InnoDB有多个内存块，可以认为这些内存块组成了一个大的内存池，负责如下工作：<br>1.维护所有进程/线程需要访问的多个内部数据结构。<br>2.缓存磁盘上的数据，方便快速的读取，并且在对磁盘文件的数据进行修改之前在这里缓存。<br>3.重做日志（redo log）缓冲。<br>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据。此外，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生 异常情况下InnoDB能恢复到正常运行状态。<br>InnoDB存储引擎内存由以下几个部分组成：<br>缓冲池（buffer pool）、重做日志缓冲池（redo log buffer）以及额外的内存池（additional memory pool），分别由配置文件中的参数<br>innodb_buffer_pool_size、innodb_log_buffer_size、innodb_additional_mem_pool_size的大小决定。<br>缓冲池中缓存的数据页类型有：索引页、数据页、undo页、插入缓冲（insert buffer），自适应哈希索引（adaptive hash index）、InnoDB存储的锁信息（lock info）、数据字典信息（data dictionary）等，缓冲池不仅有数据页和索引页，只是他们占缓冲池的很大部分。<br>缓冲池是用来存放各种数据的缓冲，因为InnoDB的存储引擎的工作方式总是将数据库文件按页（每页16K）读取到缓冲池，然后按最近最少使用（LRU）的算法来保 留在缓冲池中的缓存数据。如果数据库文件需要修改，总是首先修改在缓冲池中的页（发生修改后，该页即为脏页），然后再按照一定的频率将缓冲池的脏页刷新 （flush）到文件。<br>日志缓冲将重做日志信息先放入这个缓冲区，然后按一定频率将其刷新到重做日志文件，该值一般不需要设置很大，因为一般情况下每一秒就会将重做日志缓冲刷新 到日志文件，因此我们只需要保证每秒产生的事务量在innodb_log_buffer_size参数控制的缓冲大小之内即可。 额外的内存池通常被忽略，其实该值十分重要，在InnoDB存储引擎中，对内存的管理是通过一种称为内存堆（heap）的方式进行的。在对一些数据结构本身分配内存时，需要从额外内存池中申请，该区域的内存不够时，会从缓存池中申请。InnoDB实例会申请缓冲池（InnoDB_buffer_pool）的空间，但是每个缓冲池中的帧缓冲（frame buffer）还有对应的缓冲控制对象（buffer control block），而且这些对象记录了诸如LRU、锁、等待方面的信息，而这个对象的内存需要从额外内存池中申请。因此InnoDB缓冲池比较大时，额外内存池也应该增大</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/bufferpool/" data-id="cjjv7pee300003oqw0laos5d2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/bufferpool/" data-id="cjjv7wxn40003c0qwooqrl78m" class="article-share-link">Share</a>
       
       
     </footer>

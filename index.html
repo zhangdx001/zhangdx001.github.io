@@ -92,7 +92,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/内存数据库/" data-id="cjjv7peee00033oqwscnxpk0j" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/内存数据库/" data-id="cjjv7wxn10002c0qwttlftahh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -124,20 +124,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Latch和lock的区别<br>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。<br>Latch和Lock的对比</p>
-<ol>
+        <h3 id="Latch和lock的区别"><a href="#Latch和lock的区别" class="headerlink" title="Latch和lock的区别"></a>Latch和lock的区别</h3><p>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。</p>
+<h3 id="Latch和Lock的对比"><a href="#Latch和Lock的对比" class="headerlink" title="Latch和Lock的对比"></a>Latch和Lock的对比</h3><ol>
 <li>Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥Latch的访问，包括查询也是互斥的，任何时候，只能有一个进程能pin住内存的某一块，幸好这个过程是相当的短暂，否则系统性能将没的保障，现在从9I开始，允许多个进程同时查询相同的内存块，但性能并没有想象中的好。</li>
 <li>Latch只作用于内存中，他只能被当前实例访问，而Lock作用于数据库对象，在RAC体系中实例间允许Lock检测与访问。</li>
 <li>Latch是瞬间的占用，释放，Lock的释放需要等到事务正确的结束，他占用的时间长短由事务大小决定。</li>
 <li>Latch是非入队的，而Lock是入队的。</li>
-<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)</li>
+<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)<h3 id="mysql中Latch"><a href="#mysql中Latch" class="headerlink" title="mysql中Latch"></a>mysql中Latch</h3>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</li>
 </ol>
-<p>mysql中Latch。<br>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv7peec00023oqwngtya61o" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv7wxmn0001c0qwudj3hxla" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,13 +168,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>##缓冲池（BufferPool）<br>对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通过将部分常用或者需要预取的数据存放在缓冲池以便系统直接访问和操作可以减少磁盘I/O，合理的缓冲池空间和好的缓冲池页面替换算法（提高命中率）可以大大提高数据库系统的性能。</p>
-<p>###缓冲池组成<br>InnoDB有多个内存块，可以认为这些内存块组成了一个大的内存池，负责如下工作：<br>1.维护所有进程/线程需要访问的多个内部数据结构。<br>2.缓存磁盘上的数据，方便快速的读取，并且在对磁盘文件的数据进行修改之前在这里缓存。<br>3.重做日志（redo log）缓冲。<br>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据。此外，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生 异常情况下InnoDB能恢复到正常运行状态。<br>InnoDB存储引擎内存由以下几个部分组成：<br>缓冲池（buffer pool）、重做日志缓冲池（redo log buffer）以及额外的内存池（additional memory pool），分别由配置文件中的参数innodb_buffer_pool_size、innodb_log_buffer_size、innodb_additional_mem_pool_size的大小决定。<br>缓冲池中缓存的数据页类型有：索引页、数据页、undo页、插入缓冲（insert buffer），自适应哈希索引（adaptive hash index）、InnoDB存储的锁信息（lock info）、数据字典信息（data dictionary）等，缓冲池不仅有数据页和索引页，只是他们占缓冲池的很大部分。<br>缓冲池是用来存放各种数据的缓冲，因为InnoDB的存储引擎的工作方式总是将数据库文件按页（每页16K）读取到缓冲池，然后按最近最少使用（LRU）的算法来保 留在缓冲池中的缓存数据。如果数据库文件需要修改，总是首先修改在缓冲池中的页（发生修改后，该页即为脏页），然后再按照一定的频率将缓冲池的脏页刷新 （flush）到文件。<br>日志缓冲将重做日志信息先放入这个缓冲区，然后按一定频率将其刷新到重做日志文件，该值一般不需要设置很大，因为一般情况下每一秒就会将重做日志缓冲刷新 到日志文件，因此我们只需要保证每秒产生的事务量在innodb_log_buffer_size参数控制的缓冲大小之内即可。 额外的内存池通常被忽略，其实该值十分重要，在InnoDB存储引擎中，对内存的管理是通过一种称为内存堆（heap）的方式进行的。在对一些数据结构本身分配内存时，需要从额外内存池中申请，该区域的内存不够时，会从缓存池中申请。InnoDB实例会申请缓冲池（InnoDB_buffer_pool）的空间，但是每个缓冲池中的帧缓冲（frame buffer）还有对应的缓冲控制对象（buffer control block），而且这些对象记录了诸如LRU、锁、等待方面的信息，而这个对象的内存需要从额外内存池中申请。因此InnoDB缓冲池比较大时，额外内存池也应该增大</p>
+        <h2 id="缓冲池（BufferPool）"><a href="#缓冲池（BufferPool）" class="headerlink" title="缓冲池（BufferPool）"></a>缓冲池（BufferPool）</h2><p>对于数据库管这种对性能要求极高的系统而言，缓存自然也是不可少的。数据库中的缓存称为缓冲池，缓冲池存在的唯一目的就是提高数据库系统性能。缓冲池本质上是分配给数据库管理器管理的一块内存空间，用于读写数据页。Page（包括表行和索引数据页。内存中表行数据页称为缓存表）由于从内存访问数据比从磁盘访问数据快得多（访问磁盘是典型的I/O操作，一次I/O大概耗时0.0125S），通过将部分常用或者需要预取的数据存放在缓冲池以便系统直接访问和操作可以减少磁盘I/O，合理的缓冲池空间和好的缓冲池页面替换算法（提高命中率）可以大大提高数据库系统的性能。</p>
+<h3 id="缓冲池组成"><a href="#缓冲池组成" class="headerlink" title="缓冲池组成"></a>缓冲池组成</h3><p>InnoDB有多个内存块，可以认为这些内存块组成了一个大的内存池，负责如下工作：<br>1.维护所有进程/线程需要访问的多个内部数据结构。<br>2.缓存磁盘上的数据，方便快速的读取，并且在对磁盘文件的数据进行修改之前在这里缓存。<br>3.重做日志（redo log）缓冲。<br>后台线程的主要作用是负责刷新内存池中的数据，保证缓冲池中的内存缓存的是最近的数据。此外，将已修改的数据文件刷新到磁盘文件，同时保证在数据库发生 异常情况下InnoDB能恢复到正常运行状态。<br>InnoDB存储引擎内存由以下几个部分组成：<br>缓冲池（buffer pool）、重做日志缓冲池（redo log buffer）以及额外的内存池（additional memory pool），分别由配置文件中的参数<br>innodb_buffer_pool_size、innodb_log_buffer_size、innodb_additional_mem_pool_size的大小决定。<br>缓冲池中缓存的数据页类型有：索引页、数据页、undo页、插入缓冲（insert buffer），自适应哈希索引（adaptive hash index）、InnoDB存储的锁信息（lock info）、数据字典信息（data dictionary）等，缓冲池不仅有数据页和索引页，只是他们占缓冲池的很大部分。<br>缓冲池是用来存放各种数据的缓冲，因为InnoDB的存储引擎的工作方式总是将数据库文件按页（每页16K）读取到缓冲池，然后按最近最少使用（LRU）的算法来保 留在缓冲池中的缓存数据。如果数据库文件需要修改，总是首先修改在缓冲池中的页（发生修改后，该页即为脏页），然后再按照一定的频率将缓冲池的脏页刷新 （flush）到文件。<br>日志缓冲将重做日志信息先放入这个缓冲区，然后按一定频率将其刷新到重做日志文件，该值一般不需要设置很大，因为一般情况下每一秒就会将重做日志缓冲刷新 到日志文件，因此我们只需要保证每秒产生的事务量在innodb_log_buffer_size参数控制的缓冲大小之内即可。 额外的内存池通常被忽略，其实该值十分重要，在InnoDB存储引擎中，对内存的管理是通过一种称为内存堆（heap）的方式进行的。在对一些数据结构本身分配内存时，需要从额外内存池中申请，该区域的内存不够时，会从缓存池中申请。InnoDB实例会申请缓冲池（InnoDB_buffer_pool）的空间，但是每个缓冲池中的帧缓冲（frame buffer）还有对应的缓冲控制对象（buffer control block），而且这些对象记录了诸如LRU、锁、等待方面的信息，而这个对象的内存需要从额外内存池中申请。因此InnoDB缓冲池比较大时，额外内存池也应该增大</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/bufferpool/" data-id="cjjv7pee300003oqw0laos5d2" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/bufferpool/" data-id="cjjv7wxn40003c0qwooqrl78m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -220,7 +219,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/hello-world/" data-id="cjjv7pee900013oqwzrea7e4m" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/hello-world/" data-id="cjjv7wxmg0000c0qwehimcx34" class="article-share-link">Share</a>
       
       
     </footer>

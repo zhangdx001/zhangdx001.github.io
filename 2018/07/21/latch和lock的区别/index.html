@@ -5,17 +5,17 @@
   
   <title>Latch和lock的区别 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥L">
+  <meta name="description" content="Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 Latch和Lock的对比 Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥L">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Latch和lock的区别">
 <meta property="og:url" content="http://yoursite.com/2018/07/21/latch和lock的区别/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥L">
+<meta property="og:description" content="Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 Latch和Lock的对比 Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥L">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-21T09:02:54.527Z">
+<meta property="og:updated_time" content="2018-07-21T09:35:14.891Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Latch和lock的区别">
-<meta name="twitter:description" content="Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥L">
+<meta name="twitter:description" content="Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 Latch和Lock的对比 Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥L">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -86,20 +86,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Latch和lock的区别<br>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。<br>Latch和Lock的对比</p>
-<ol>
+        <h3 id="Latch和lock的区别"><a href="#Latch和lock的区别" class="headerlink" title="Latch和lock的区别"></a>Latch和lock的区别</h3><p>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。</p>
+<h3 id="Latch和Lock的对比"><a href="#Latch和Lock的对比" class="headerlink" title="Latch和Lock的对比"></a>Latch和Lock的对比</h3><ol>
 <li>Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥Latch的访问，包括查询也是互斥的，任何时候，只能有一个进程能pin住内存的某一块，幸好这个过程是相当的短暂，否则系统性能将没的保障，现在从9I开始，允许多个进程同时查询相同的内存块，但性能并没有想象中的好。</li>
 <li>Latch只作用于内存中，他只能被当前实例访问，而Lock作用于数据库对象，在RAC体系中实例间允许Lock检测与访问。</li>
 <li>Latch是瞬间的占用，释放，Lock的释放需要等到事务正确的结束，他占用的时间长短由事务大小决定。</li>
 <li>Latch是非入队的，而Lock是入队的。</li>
-<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)</li>
+<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)<h3 id="mysql中Latch"><a href="#mysql中Latch" class="headerlink" title="mysql中Latch"></a>mysql中Latch</h3>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</li>
 </ol>
-<p>mysql中Latch。<br>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv7peec00023oqwngtya61o" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv7wxmn0001c0qwudj3hxla" class="article-share-link">Share</a>
       
       
     </footer>
