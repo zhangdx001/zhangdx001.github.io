@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="##Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 ###Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/2018/07/21/latch和lock的区别/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="##Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 ###Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-07-21T08:57:24.318Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+<meta name="twitter:description" content="##Latch和lock的区别Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。 ###Latch和Lock的对比  Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-latch和lock的区别" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/07/21/latch和lock的区别/" class="article-date">
+  <time datetime="2018-07-21T08:47:51.366Z" itemprop="datePublished">2018-07-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>##Latch和lock的区别<br>Latch是Oracle提供的轻量级锁资源，用于快速，短时间的锁定资源，防止多个并发进程同时修改访问某个共享资源，他只工作在内存中，我们可以不大准确的说，内存中资源的锁叫latch，数据库对象(表，索引等)的锁叫Lock。</p>
+<p>###Latch和Lock的对比</p>
+<ol>
+<li>Latch是对内存数据结构提供互斥访问的一种机制，而Lock是以不同的模式来套取共享资源对象，各个模式间存在着兼容或排斥Latch的访问，包括查询也是互斥的，任何时候，只能有一个进程能pin住内存的某一块，幸好这个过程是相当的短暂，否则系统性能将没的保障，现在从9I开始，允许多个进程同时查询相同的内存块，但性能并没有想象中的好。</li>
+<li>Latch只作用于内存中，他只能被当前实例访问，而Lock作用于数据库对象，在RAC体系中实例间允许Lock检测与访问。</li>
+<li>Latch是瞬间的占用，释放，Lock的释放需要等到事务正确的结束，他占用的时间长短由事务大小决定。</li>
+<li>Latch是非入队的，而Lock是入队的。</li>
+<li>Latch不存在死锁，而Lock中存在(死锁在Oracle中是非常少见的)<br>###mysql中Latch。<br>latch 一般称为闩锁(轻量级的锁) 因为其要求锁定的时间非常短，若迟勋时间长，则应用性能非常差，在InnoDB存储引擎中，latch有可以分为mutex(互斥锁)和rwlock(读写锁)其目的用来保证并发线程操作临界资源的正确性，并且没有死锁检测的机制。操作缓冲池汇总的LRU列表，删除、添加、移动LRU列表中的元素等使用的都是Latch。<br>在InnoDB存储引擎中的latch，可以通过命令SHOW ENGINE INNODB MUTEX 来进行查看。</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/07/21/latch和lock的区别/" data-id="cjjv6k6nd0002xsqw7yvpzghp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/07/21/bufferpool/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">bufferpool</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/07/21/latch和lock的区别/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/21/bufferpool/">bufferpool</a>
+          </li>
+        
+          <li>
+            <a href="/2018/07/21/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
